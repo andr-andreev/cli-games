@@ -2,15 +2,11 @@
 
 build-run: build run
 
-build: compile
-	jar cfe ./target/games.jar games.Slot -C ./target/classes .
-
-compile: clear
-	mkdir -p ./target/classes
-	javac -d ./target/classes ./src/main/java/games/Slot.java
+build: clear
+	./mvnw package
 
 run:
-	java -jar ./target/games.jar
+	java -jar ./target/games-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 clear:
-	rm -rf ./target
+	 ./mvnw clean
