@@ -1,6 +1,9 @@
-.DEFAULT_GOAL := compile-run
+.DEFAULT_GOAL := build-run
 
-compile-run: compile run
+build-run: build run
+
+build: compile
+	jar cfe ./target/games.jar games.Slot -C ./target/classes .
 
 compile: clear
 	mkdir -p ./target/classes
