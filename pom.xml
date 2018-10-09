@@ -17,7 +17,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>10</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!--Libs-->
         <log4j-slf4j-impl.version>2.11.1</log4j-slf4j-impl.version>
