@@ -10,7 +10,7 @@ compile: clear
 	javac -d ./target/classes ./src/main/java/games/Slot.java
 
 run:
-	java -cp ./target/classes games.Slot
+	java -jar ./target/games.jar
 
 clear:
 	rm -rf ./target
