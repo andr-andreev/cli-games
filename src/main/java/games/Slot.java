@@ -13,25 +13,23 @@ public class Slot {
         int drum3 = 0;
 
         while (balance > 0) {
-            System.out.println(String.format("Your balance is $%d. Your bet is $%d.", balance, bet));
+            System.out.format("Your balance is $%d. Your bet is $%d.%n", balance, bet);
 
             drum1 = getNextValue(drum1);
             drum2 = getNextValue(drum2);
             drum3 = getNextValue(drum3);
 
             System.out.println("Spin result:");
-            System.out.println(String.format("The 1st drum - %d, the 2nd drum - %d, the 3rd drum - %d", drum1, drum2, drum3));
+            System.out.format("The 1st drum - %d, the 2nd drum - %d, the 3rd drum - %d.%n", drum1, drum2, drum3);
 
             int result = isWinningCombination(drum1, drum2, drum3) ? prize : -bet;
             balance += result;
 
-            System.out.println(
-                    String.format(
-                            "You %s $%d. Your balance is: $%d.%n",
-                            result > 0 ? "won" : "lost",
-                            Math.abs(result),
-                            balance > 0 ? balance : 0
-                    )
+            System.out.format(
+                    "You %s $%d. Your balance is: $%d.%n%n",
+                    result > 0 ? "won" : "lost",
+                    Math.abs(result),
+                    balance > 0 ? balance : 0
             );
         }
     }
