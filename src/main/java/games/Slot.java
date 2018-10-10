@@ -26,12 +26,11 @@ public class Slot {
     public void play() {
         while (getBalance() > 0) {
             System.out.println(String.format("Your balance is $%d. Your bet is $%d.", getBalance(), bet));
-            spin();
+            int result = spin();
 
             System.out.println("Spin result:");
             System.out.println(String.format("The 1st drum - %d, the 2nd drum - %d, the 3rd drum - %d", drum1, drum2, drum3));
 
-            int result = getSpinResult();
             modifyBalance(result);
 
             System.out.println(
@@ -53,10 +52,14 @@ public class Slot {
         balance += amount;
     }
 
-    private void spin() {
+    private int spin() {
         drum1 = getNextValue(drum1);
         drum2 = getNextValue(drum2);
         drum3 = getNextValue(drum3);
+
+        boolean isWinningCombination = drum1 == drum2 && drum1 == drum3;
+
+        return isWinningCombination ? prize : -bet;
     }
 
     private int getNextValue(final int currentValue) {
@@ -65,11 +68,5 @@ public class Slot {
 
     private int getMovementValue() {
         return (int) Math.round(Math.random() * 100);
-    }
-
-    private int getSpinResult() {
-        boolean isWinningCombination = drum1 == drum2 && drum1 == drum3;
-
-        return isWinningCombination ? prize : -bet;
     }
 }
