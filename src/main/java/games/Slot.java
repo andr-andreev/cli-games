@@ -36,7 +36,7 @@ public class Slot {
 
             System.out.println(
                     String.format(
-                            "You %s $%d. Your balance is: $%d.\n",
+                            "You %s $%d. Your balance is: $%d.%n",
                             result > 0 ? "won" : "lost",
                             Math.abs(result),
                             getBalance()
