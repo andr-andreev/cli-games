@@ -128,6 +128,8 @@ public class Drunkard {
                 case 1:
                     higherCardIndex = i;
                     break;
+                default:
+                    break;
             }
         }
 
