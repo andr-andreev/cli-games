@@ -2,18 +2,19 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
-import java.util.stream.IntStream;
+import java.util.Arrays;
 
 public class Drunkard {
-    private static final Integer PLAYERS_COUNT = 2;
-    private static final Integer RANKS_COUNT = Rank.values().length;
-    private static final Integer CARDS_COUNT = RANKS_COUNT * Suit.values().length;
-    private static final Integer PLAYER_CARDS_COUNT = CARDS_COUNT / PLAYERS_COUNT;
+    private static final int PLAYERS_COUNT = 3;
+    private static final int RANKS_COUNT = Rank.values().length;
+    private static final int CARDS_COUNT = RANKS_COUNT * Suit.values().length;
+    private static final int PLAYER_CARDS_COUNT = CARDS_COUNT / PLAYERS_COUNT;
 
-    private static int[] players = new int[PLAYERS_COUNT];
     private static int[][] playersCards = new int[PLAYERS_COUNT][CARDS_COUNT];
     private static int[] playersCardsBeginCursors = new int[PLAYERS_COUNT];
     private static int[] playersCardsEndCursors = new int[PLAYERS_COUNT];
+    private static int[] playersCardCounts = new int[PLAYERS_COUNT];
+    private static int[] activePlayers = new int[PLAYERS_COUNT];
 
     enum Suit {
         SPADES,
@@ -35,135 +36,117 @@ public class Drunkard {
     }
 
     public static void main(String... __) {
-        int[] deck = createDeck();
-        divideDeck(deck);
+        divideDeck(createDeck());
 
         printCards();
 
-        players = IntStream.range(0, PLAYERS_COUNT).toArray();
+        activePlayers = createRange(0, PLAYERS_COUNT);
 
-        while (getWinner() == null) {
+        while (activePlayers.length > 1) {
             makeTurn();
         }
 
-        System.out.println();
-        System.out.printf("Player %d won the game", getPlayerNumber(getWinner()));
+        System.out.printf("%nPlayer %d won the game.", getPlayerNumber(activePlayers[0]));
     }
 
 
     private static int[] createDeck() {
-        int[] deck = IntStream.range(0, CARDS_COUNT).toArray();
+        int[] deck = createRange(0, CARDS_COUNT);
         MathArrays.shuffle(deck);
 
         return deck;
     }
 
-    private static void divideDeck(int[] deck) {
-        for (Integer i = 0; i < PLAYERS_COUNT; i++) {
+    private static void divideDeck(final int[] deck) {
+        for (int i = 0; i < PLAYERS_COUNT; i++) {
             System.arraycopy(deck, i * PLAYER_CARDS_COUNT, playersCards[i], 0, PLAYER_CARDS_COUNT);
 
             playersCardsEndCursors[i] = PLAYER_CARDS_COUNT;
+            playersCardCounts[i] = PLAYER_CARDS_COUNT;
         }
     }
 
     private static void makeTurn() {
         int[] cards = new int[PLAYERS_COUNT];
 
-        for (Integer playerIndex : players) {
-            cards[playerIndex] = getCardByPlayer(playerIndex);
+        for (int playerIndex : activePlayers) {
+            int playerCard = getCardByPlayer(playerIndex);
+            cards[playerIndex] = playerCard;
+            System.out.printf("Player %d revealed %14s; ", getPlayerNumber(playerIndex), toString(playerCard));
         }
 
-        Integer winner = compareCards(cards);
+        Integer higherCardPlayerIndex = compareCards(cards);
+        boolean isDraw = higherCardPlayerIndex == null;
 
-        if (winner == null) {
-            for (Integer playerIndex : players) {
-                addCardToPlayer(playerIndex, cards[playerIndex]);
-            }
-        } else {
-            for (Integer card : cards) {
-                addCardToPlayer(winner, card);
-            }
+        for (int playerIndex : activePlayers) {
+            addCardToPlayer(isDraw ? playerIndex : higherCardPlayerIndex, cards[playerIndex]);
         }
 
-        for (Integer playerIndex : players) {
-            System.out.printf("Player %d revealed %14s; ", getPlayerNumber(playerIndex), toString(cards[playerIndex]));
-        }
-
-        String turnResult = winner == null
+        String turnResult = isDraw
                 ? "Draw! "
-                : String.format("Player %d won! ", getPlayerNumber(winner));
+                : String.format("Player %d won!", getPlayerNumber(higherCardPlayerIndex));
 
-        System.out.printf("%-17s", turnResult);
+        System.out.printf("%-14s", turnResult);
 
-        for (Integer playerIndex : players) {
-            System.out.printf("Player %d has %2d cards; ", getPlayerNumber(playerIndex), cardsOwnedByPlayer(playerIndex));
+        for (int playerIndex : activePlayers) {
+            System.out.printf("Player %d has %2d cards; ", getPlayerNumber(playerIndex), getPlayerCardCount(playerIndex));
         }
+
+        activePlayers = Arrays.stream(activePlayers)
+                .filter(playerIndex -> getPlayerCardCount(playerIndex) > 0)
+                .toArray();
+
         System.out.println();
     }
 
-    private static Integer getWinner() {
-        for (Integer playerIndex : players) {
-            if (cardsOwnedByPlayer(playerIndex).equals(CARDS_COUNT)) {
-                return playerIndex;
-            }
-        }
-
-        return null;
-    }
-
     private static Integer compareCards(final int[] cards) {
-        Integer higherCardIndex = 0;
+        int higherCardPlayerIndex = activePlayers[0];
+        int drawCount = 0;
 
-        Integer drawCount = 0;
+        for (int playerIndex : activePlayers) {
+            int card = cards[playerIndex];
 
-        for (Integer i = 0; i < cards.length; i++) {
-            Integer card = cards[i];
-
-            Integer result = comparePairOfCards(getCardRank(card), getCardRank(cards[higherCardIndex]));
+            int result = comparePairOfCards(getCardRank(card), getCardRank(cards[higherCardPlayerIndex]));
 
             switch (result) {
                 case 0:
                     drawCount++;
                     break;
                 case 1:
-                    higherCardIndex = i;
+                    higherCardPlayerIndex = playerIndex;
                     break;
                 default:
                     break;
             }
         }
 
-        if (drawCount == cards.length) {
+        if (drawCount == activePlayers.length) {
             return null;
         }
 
-        return higherCardIndex;
+        return higherCardPlayerIndex;
     }
 
-    private static Integer comparePairOfCards(Rank card1, Rank card2) {
-        if (card1 == Rank.ACE && card2 == Rank.SIX) {
-            return -1;
-        }
-
-        if (card1 == Rank.SIX && card2 == Rank.ACE) {
-            return 1;
+    private static int comparePairOfCards(final Rank card1, final Rank card2) {
+        if ((card1 == Rank.ACE && card2 == Rank.SIX) || (card1 == Rank.SIX && card2 == Rank.ACE)) {
+            return card1 == Rank.ACE ? -1 : 1;
         }
 
         return Integer.compare(card1.ordinal(), card2.ordinal());
     }
 
-    private static Suit getCardSuit(final Integer cardNumber) {
+    private static Suit getCardSuit(final int cardNumber) {
         return Suit.values()[cardNumber / RANKS_COUNT];
     }
 
-    private static Rank getCardRank(final Integer cardNumber) {
+    private static Rank getCardRank(final int cardNumber) {
         return Rank.values()[cardNumber % RANKS_COUNT];
     }
 
     private static void printCards() {
-        for (Integer i = 0; i < PLAYERS_COUNT; i++) {
+        for (int i = 0; i < activePlayers.length; i++) {
             System.out.printf("Player %d cards:%n", getPlayerNumber(i));
-            for (Integer j = 0; j < PLAYER_CARDS_COUNT; j++) {
+            for (int j = 0; j < getPlayerCardCount(activePlayers[i]); j++) {
                 System.out.println(toString(playersCards[i][j]));
             }
 
@@ -171,41 +154,48 @@ public class Drunkard {
         }
     }
 
-    private static String toString(final Integer cardNumber) {
+    private static String toString(final int cardNumber) {
         return getCardRank(cardNumber) + " " + getCardSuit(cardNumber);
     }
 
-    private static Integer cardsOwnedByPlayer(final Integer playerIndex) {
-        Integer count = playersCardsEndCursors[playerIndex] - playersCardsBeginCursors[playerIndex];
-
-        if (count < 0) {
-            count += CARDS_COUNT;
-        }
-
-        return count;
+    private static int getPlayerCardCount(final int playerIndex) {
+        return playersCardCounts[playerIndex];
     }
 
-    private static Integer getCardByPlayer(final Integer playerIndex) {
-        Integer currentIndex = playersCardsBeginCursors[playerIndex];
-        Integer card = playersCards[playerIndex][currentIndex];
+    private static int getCardByPlayer(final int playerIndex) {
+        int currentIndex = playersCardsBeginCursors[playerIndex];
+        int card = playersCards[playerIndex][currentIndex];
+
         playersCardsBeginCursors[playerIndex] = incrementIndex(currentIndex);
+        playersCardCounts[playerIndex]--;
 
         return card;
     }
 
-    private static void addCardToPlayer(final Integer playerNum, final Integer card) {
-        Integer currentIndex = playersCardsEndCursors[playerNum];
-        playersCards[playerNum][currentIndex] = card;
-        Integer nextIndex = incrementIndex(currentIndex);
-        playersCardsEndCursors[playerNum] = nextIndex;
+    private static void addCardToPlayer(final int playerIndex, final int card) {
+        int currentIndex = playersCardsEndCursors[playerIndex];
+        playersCards[playerIndex][currentIndex] = card;
+
+        playersCardsEndCursors[playerIndex] = incrementIndex(currentIndex);
+        playersCardCounts[playerIndex]++;
     }
 
 
-    private static Integer incrementIndex(Integer i) {
+    private static int incrementIndex(final int i) {
         return (i + 1) % CARDS_COUNT;
     }
 
-    private static Integer getPlayerNumber(Integer playerIndex) {
+    private static int getPlayerNumber(final int playerIndex) {
         return playerIndex + 1;
+    }
+
+    private static int[] createRange(final int start, final int end) {
+        int[] result = new int[end - start];
+
+        for (int i = 0; i < end - start; i++) {
+            result[i] = start + i;
+        }
+
+        return result;
     }
 }
