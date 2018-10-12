@@ -9,6 +9,7 @@ public class Drunkard {
     private static final int RANKS_COUNT = Rank.values().length;
     private static final int CARDS_COUNT = RANKS_COUNT * Suit.values().length;
     private static final int PLAYER_CARDS_COUNT = CARDS_COUNT / PLAYERS_COUNT;
+    private static final int DRAW_RESULT = -1;
 
     private static int[][] playersCards = new int[PLAYERS_COUNT][CARDS_COUNT];
     private static int[] playersCardsBeginCursors = new int[PLAYERS_COUNT];
@@ -75,14 +76,13 @@ public class Drunkard {
             System.out.printf("Player %d revealed %14s; ", getPlayerNumber(playerIndex), toString(playerCard));
         }
 
-        Integer higherCardPlayerIndex = compareCards(cards);
-        boolean isDraw = higherCardPlayerIndex == null;
+        int higherCardPlayerIndex = compareCards(cards);
 
         for (int playerIndex : activePlayers) {
-            addCardToPlayer(isDraw ? playerIndex : higherCardPlayerIndex, cards[playerIndex]);
+            addCardToPlayer(higherCardPlayerIndex == DRAW_RESULT ? playerIndex : higherCardPlayerIndex, cards[playerIndex]);
         }
 
-        String turnResult = isDraw
+        String turnResult = higherCardPlayerIndex == DRAW_RESULT
                 ? "Draw! "
                 : String.format("Player %d won!", getPlayerNumber(higherCardPlayerIndex));
 
@@ -99,7 +99,7 @@ public class Drunkard {
         System.out.println();
     }
 
-    private static Integer compareCards(final int[] cards) {
+    private static int compareCards(final int[] cards) {
         int higherCardPlayerIndex = activePlayers[0];
         int drawCount = 0;
 
@@ -121,7 +121,7 @@ public class Drunkard {
         }
 
         if (drawCount == activePlayers.length) {
-            return null;
+            return DRAW_RESULT;
         }
 
         return higherCardPlayerIndex;
