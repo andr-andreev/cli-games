@@ -1,8 +1,12 @@
 package games;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class Blackjack {
+    private static final Logger logger = LoggerFactory.getLogger(Blackjack.class);
+
     private static final int MAX_VALUE = 21;
     private static final int MAX_CARDS_COUNT = 8;
 
@@ -38,29 +42,29 @@ public class Blackjack {
             int handValue1 = getHandValue(INTERACTIVE_PLAYER_INDEX);
             int handValue2 = getHandValue(NON_INTERACTIVE_PLAYER_INDEX);
 
-            System.out.printf("Your hand's value is %d. Other player hand's value is %d.%n", handValue1, handValue2);
+            logger.info("Your hand's value is {}. Other player hand's value is {}.", handValue1, handValue2);
 
             int winnerPlayerIndex = handValue1 > handValue2 ? 0 : 1;
 
             playersBalances[winnerPlayerIndex] += betSum;
 
             if (winnerPlayerIndex == 0) {
-                System.out.printf("You won $%d.%n%n", betSum - BET);
+                logger.info("You won ${}", betSum - BET);
             } else {
-                System.out.printf("You lost $%d.%n%n", BET);
+                logger.info("You lost ${}", BET);
             }
         }
 
         String gameResultMessage = getPlayerBalance(INTERACTIVE_PLAYER_INDEX) > 0
-                ? "You won the game."
-                : "You lost the game.";
+                ? "You won the game"
+                : "You lost the game";
 
-        System.out.println(gameResultMessage);
+        logger.info(gameResultMessage);
     }
 
     private static void initRound() {
-        System.out.printf(
-                "Your balance is $%d. Other player's balance is $%d. Let's start a new round!%n",
+        logger.info(
+                "Your balance is ${}. Other player's balance is ${}. Let's start a new round!",
                 getPlayerBalance(INTERACTIVE_PLAYER_INDEX),
                 getPlayerBalance(NON_INTERACTIVE_PLAYER_INDEX)
         );
@@ -96,7 +100,7 @@ public class Blackjack {
         }
 
         while (getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
-            System.out.print("The player took a new card. ");
+            logger.info("The player took a new card");
             int card = addCardToPlayer(playerIndex);
 
             printCardForNonInteractivePlayer(card);
@@ -104,11 +108,11 @@ public class Blackjack {
     }
 
     private static void printCardForInteractivePlayer(int card) {
-        System.out.printf("You got a %s%n", CardUtils.toString(card));
+        logger.info("You got a {}", CardUtils.toString(card));
     }
 
     private static void printCardForNonInteractivePlayer(int card) {
-        System.out.printf("The player got a %s%n", CardUtils.toString(card));
+        logger.info("The player got a {}", CardUtils.toString(card));
     }
 
     private static int addCardToPlayer(int player) {
@@ -139,7 +143,7 @@ public class Blackjack {
     }
 
     static boolean confirm(String message) {
-        System.out.println(message + " [y/n]");
+        logger.info(message + " [y/n]");
 
         try {
             switch (Character.toUpperCase(Choice.getCharacterFromUser())) {

@@ -1,12 +1,16 @@
 package games;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class Choice {
+    private static final Logger logger = LoggerFactory.getLogger(Choice.class);
+
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static void main(String... __) throws IOException {
-        System.out.println(
+        logger.info(
                 "Please select a game:\n" +
                         "1. Slot machine\n" +
                         "2. Drunkard\n" +
@@ -24,7 +28,7 @@ public class Choice {
                 Blackjack.main();
                 break;
             default:
-                System.out.println("Invalid selection");
+                logger.info("Invalid selection");
         }
     }
 

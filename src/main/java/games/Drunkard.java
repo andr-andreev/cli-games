@@ -1,8 +1,12 @@
 package games;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
 public class Drunkard {
+    private static final Logger logger = LoggerFactory.getLogger(Drunkard.class);
+
     private static final int PLAYERS_COUNT = 3;
     private static final int PLAYER_CARDS_COUNT = CardUtils.CARDS_COUNT / PLAYERS_COUNT;
     private static final int DRAW_RESULT = -1;
@@ -26,7 +30,7 @@ public class Drunkard {
             makeTurn();
         }
 
-        System.out.printf("%nPlayer %d won the game.", getPlayerNumber(activePlayers[0]));
+        logger.info("Player {} won the game", getPlayerNumber(activePlayers[0]));
     }
 
     private static void divideDeck(final int[] deck) {
@@ -44,7 +48,7 @@ public class Drunkard {
         for (int playerIndex : activePlayers) {
             int playerCard = getCardByPlayer(playerIndex);
             cards[playerIndex] = playerCard;
-            System.out.printf("Player %d revealed %14s; ", getPlayerNumber(playerIndex), CardUtils.toString(playerCard));
+            logger.info("Player {} revealed a {}", getPlayerNumber(playerIndex), CardUtils.toString(playerCard));
         }
 
         int higherCardPlayerIndex = compareCards(cards);
@@ -54,20 +58,18 @@ public class Drunkard {
         }
 
         String turnResult = higherCardPlayerIndex == DRAW_RESULT
-                ? "Draw! "
+                ? "Draw!"
                 : String.format("Player %d won!", getPlayerNumber(higherCardPlayerIndex));
 
-        System.out.printf("%-14s", turnResult);
+        logger.info("{}", turnResult);
 
         for (int playerIndex : activePlayers) {
-            System.out.printf("Player %d has %2d cards; ", getPlayerNumber(playerIndex), getPlayerCardCount(playerIndex));
+            logger.info("Player {} has {} cards", getPlayerNumber(playerIndex), getPlayerCardCount(playerIndex));
         }
 
         activePlayers = Arrays.stream(activePlayers)
                 .filter(playerIndex -> getPlayerCardCount(playerIndex) > 0)
                 .toArray();
-
-        System.out.println();
     }
 
     private static int compareCards(final int[] cards) {
@@ -108,12 +110,10 @@ public class Drunkard {
 
     private static void printCards() {
         for (int i = 0; i < activePlayers.length; i++) {
-            System.out.printf("Player %d cards:%n", getPlayerNumber(i));
+            logger.info("Player {} cards:", getPlayerNumber(i));
             for (int j = 0; j < getPlayerCardCount(activePlayers[i]); j++) {
-                System.out.println(CardUtils.toString(playersCards[i][j]));
+                logger.info(CardUtils.toString(playersCards[i][j]));
             }
-
-            System.out.println();
         }
     }
 
