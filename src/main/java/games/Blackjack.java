@@ -82,13 +82,9 @@ public class Blackjack {
             printCardForInteractivePlayer(card);
         }
 
-        while (getHandSum(playerIndex) < MAX_VALUE) {
-            if (confirm("Do you want to take a new card?")) {
-                int card = addCardToPlayer(playerIndex);
-                printCardForInteractivePlayer(card);
-            } else {
-                break;
-            }
+        while (getHandSum(playerIndex) < MAX_VALUE && confirm("Do you want to take a new card?")) {
+            int card = addCardToPlayer(playerIndex);
+            printCardForInteractivePlayer(card);
         }
     }
 
