@@ -24,7 +24,7 @@ public class Blackjack {
 
     private static int[] playersBalances = {100, 100};
 
-    public static void main(String... __) {
+    public static void main(String... __) throws IOException {
         deck = CardUtils.getShuffledDeck();
 
         while (getPlayerBalance(INTERACTIVE_PLAYER_INDEX) > 0 && getPlayerBalance(NON_INTERACTIVE_PLAYER_INDEX) > 0) {
@@ -75,7 +75,7 @@ public class Blackjack {
         cursor = 0;
     }
 
-    private static void playInteractiveRound(int playerIndex) {
+    private static void playInteractiveRound(int playerIndex) throws IOException {
         int[] cards = new int[]{addCardToPlayer(playerIndex), addCardToPlayer(playerIndex)};
 
         for (int card : cards) {
@@ -142,18 +142,14 @@ public class Blackjack {
         return sum <= 21 ? sum : 0;
     }
 
-    static boolean confirm(String message) {
+    static boolean confirm(String message) throws IOException {
         logger.info(message + " [y/n]");
 
-        try {
-            switch (Character.toUpperCase(Choice.getCharacterFromUser())) {
-                case 'Y':
-                    return true;
-                default:
-                    return false;
-            }
-        } catch (IOException e) {
-            return false;
+        switch (Character.toUpperCase(Choice.getCharacterFromUser())) {
+            case 'Y':
+                return true;
+            default:
+                return false;
         }
     }
 
