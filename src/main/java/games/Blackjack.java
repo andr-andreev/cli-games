@@ -27,7 +27,7 @@ public class Blackjack {
     public static void main(String... __) throws IOException {
         deck = CardUtils.getShuffledDeck();
 
-        while (getPlayerBalance(INTERACTIVE_PLAYER_INDEX) > 0 && getPlayerBalance(NON_INTERACTIVE_PLAYER_INDEX) > 0) {
+        while (playersBalances[INTERACTIVE_PLAYER_INDEX] > 0 && playersBalances[NON_INTERACTIVE_PLAYER_INDEX] > 0) {
             initRound();
 
             int betSum = 0;
@@ -55,7 +55,7 @@ public class Blackjack {
             }
         }
 
-        String gameResultMessage = getPlayerBalance(INTERACTIVE_PLAYER_INDEX) > 0
+        String gameResultMessage = playersBalances[INTERACTIVE_PLAYER_INDEX] > 0
                 ? "You won the game"
                 : "You lost the game";
 
@@ -65,8 +65,8 @@ public class Blackjack {
     private static void initRound() {
         logger.info(
                 "Your balance is ${}. Other player's balance is ${}. Let's start a new round!",
-                getPlayerBalance(INTERACTIVE_PLAYER_INDEX),
-                getPlayerBalance(NON_INTERACTIVE_PLAYER_INDEX)
+                playersBalances[INTERACTIVE_PLAYER_INDEX],
+                playersBalances[NON_INTERACTIVE_PLAYER_INDEX]
         );
 
         deck = CardUtils.getShuffledDeck();
@@ -151,10 +151,6 @@ public class Blackjack {
             default:
                 return false;
         }
-    }
-
-    public static int getPlayerBalance(int playerIndex) {
-        return playersBalances[playerIndex];
     }
 
     private static int getCardValue(int card) {
