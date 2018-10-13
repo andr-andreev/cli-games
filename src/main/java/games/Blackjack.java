@@ -92,11 +92,8 @@ public class Blackjack {
     }
 
     private static int playInteractiveRound(int playerIndex) throws IOException {
-        int cardCount = 0;
-
-        while (cardCount < 2 || (getHandSum(playerIndex) < INTERACTIVE_HAND_VALUE_LIMIT && confirm("Do you want to take a new card?"))) {
+        while (playersCursors[playerIndex] < 2 || (getHandSum(playerIndex) < INTERACTIVE_HAND_VALUE_LIMIT && confirm("Do you want to take a new card?"))) {
             int card = addCardToPlayer(playerIndex);
-            cardCount++;
 
             logger.info("You got a {}", CardUtils.toString(card));
         }
@@ -105,15 +102,12 @@ public class Blackjack {
     }
 
     private static int playNonInteractiveRound(int playerIndex) {
-        int cardCount = 0;
-
-        while (cardCount < 2 || getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
-            if (cardCount >= 2) {
+        while (playersCursors[playerIndex] < 2 || getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
+            if (playersCursors[playerIndex] >= 2) {
                 logger.info("The player took a new card");
             }
 
             int card = addCardToPlayer(playerIndex);
-            cardCount++;
 
             logger.info("The player got a {}", CardUtils.toString(card));
         }
