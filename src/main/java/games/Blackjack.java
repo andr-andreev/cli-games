@@ -79,12 +79,12 @@ public class Blackjack {
         int[] cards = new int[]{addCardToPlayer(playerIndex), addCardToPlayer(playerIndex)};
 
         for (int card : cards) {
-            printCardForInteractivePlayer(card);
+            logger.info("You got a {}", CardUtils.toString(card));
         }
 
         while (getHandSum(playerIndex) < MAX_VALUE && confirm("Do you want to take a new card?")) {
             int card = addCardToPlayer(playerIndex);
-            printCardForInteractivePlayer(card);
+            logger.info("You got a {}", CardUtils.toString(card));
         }
     }
 
@@ -92,23 +92,15 @@ public class Blackjack {
         int[] cards = new int[]{addCardToPlayer(playerIndex), addCardToPlayer(playerIndex)};
 
         for (int card : cards) {
-            printCardForNonInteractivePlayer(card);
+            logger.info("The player got a {}", CardUtils.toString(card));
         }
 
         while (getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
             logger.info("The player took a new card");
             int card = addCardToPlayer(playerIndex);
 
-            printCardForNonInteractivePlayer(card);
+            logger.info("The player got a {}", CardUtils.toString(card));
         }
-    }
-
-    private static void printCardForInteractivePlayer(int card) {
-        logger.info("You got a {}", CardUtils.toString(card));
-    }
-
-    private static void printCardForNonInteractivePlayer(int card) {
-        logger.info("The player got a {}", CardUtils.toString(card));
     }
 
     private static int addCardToPlayer(int player) {
