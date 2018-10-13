@@ -2,6 +2,7 @@ package games;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 public class Blackjack {
@@ -16,15 +17,17 @@ public class Blackjack {
     private static final int INTERACTIVE_HAND_VALUE_LIMIT = 20;
     private static final int NON_INTERACTIVE_HAND_VALUE_LIMIT = 16;
 
+    private static final int DRAW_RESULT = -1;
+
     private static final int BET = 10;
 
     private static int[] deck;
     private static int cursor;
 
+    private static int[] players = {INTERACTIVE_PLAYER_INDEX, NON_INTERACTIVE_PLAYER_INDEX};
+    private static int[] playersBalances = {100, 100};
     private static int[][] playersCards;
     private static int[] playersCursors;
-
-    private static int[] playersBalances = {100, 100};
 
     public static void main(String... __) throws IOException {
         deck = CardUtils.getShuffledDeck();
@@ -33,27 +36,38 @@ public class Blackjack {
             initRound();
 
             int betSum = 0;
-            for (int playerIndex : new int[]{INTERACTIVE_PLAYER_INDEX, NON_INTERACTIVE_PLAYER_INDEX}) {
+            for (int playerIndex : players) {
                 playersBalances[playerIndex] -= BET;
                 betSum += BET;
             }
 
-            playInteractiveRound(INTERACTIVE_PLAYER_INDEX);
-            playNonInteractiveRound(NON_INTERACTIVE_PLAYER_INDEX);
-
-            int handValue1 = getHandValue(INTERACTIVE_PLAYER_INDEX);
-            int handValue2 = getHandValue(NON_INTERACTIVE_PLAYER_INDEX);
+            int handValue1 = playInteractiveRound(INTERACTIVE_PLAYER_INDEX);
+            int handValue2 = playNonInteractiveRound(NON_INTERACTIVE_PLAYER_INDEX);
 
             logger.info("Your hand's value is {}. Other player hand's value is {}.", handValue1, handValue2);
 
-            int winnerPlayerIndex = handValue1 > handValue2 ? 0 : 1;
+            int winnerPlayerIndex = handValue1 == handValue2
+                    ? DRAW_RESULT
+                    : (handValue1 > handValue2 ? INTERACTIVE_PLAYER_INDEX : NON_INTERACTIVE_PLAYER_INDEX);
 
-            playersBalances[winnerPlayerIndex] += betSum;
+            for (int playerIndex : players) {
+                if (winnerPlayerIndex == DRAW_RESULT) {
+                    playersBalances[playerIndex] += BET;
+                } else if (playerIndex == winnerPlayerIndex) {
+                    playersBalances[playerIndex] += betSum;
+                }
+            }
 
-            if (winnerPlayerIndex == 0) {
-                logger.info("You won ${}", betSum - BET);
-            } else {
-                logger.info("You lost ${}", BET);
+            switch (winnerPlayerIndex) {
+                case DRAW_RESULT:
+                    logger.info("Draw");
+                    break;
+                case INTERACTIVE_PLAYER_INDEX:
+                    logger.info("You won ${}", betSum - BET);
+                    break;
+                default:
+                    logger.info("You lost ${}", BET);
+                    break;
             }
         }
 
@@ -77,7 +91,7 @@ public class Blackjack {
         cursor = 0;
     }
 
-    private static void playInteractiveRound(int playerIndex) throws IOException {
+    private static int playInteractiveRound(int playerIndex) throws IOException {
         int cardCount = 0;
 
         while (cardCount < 2 || (getHandSum(playerIndex) < INTERACTIVE_HAND_VALUE_LIMIT && confirm("Do you want to take a new card?"))) {
@@ -86,9 +100,11 @@ public class Blackjack {
 
             logger.info("You got a {}", CardUtils.toString(card));
         }
+
+        return getHandValue(playerIndex);
     }
 
-    private static void playNonInteractiveRound(int playerIndex) {
+    private static int playNonInteractiveRound(int playerIndex) {
         int cardCount = 0;
 
         while (cardCount < 2 || getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
@@ -101,6 +117,8 @@ public class Blackjack {
 
             logger.info("The player got a {}", CardUtils.toString(card));
         }
+
+        return getHandValue(playerIndex);
     }
 
     private static int addCardToPlayer(int player) {
