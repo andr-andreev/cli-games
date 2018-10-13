@@ -127,7 +127,7 @@ public class Blackjack {
         return card;
     }
 
-    static int getHandSum(int player) {
+    private static int getHandSum(int player) {
         int sum = 0;
         for (int i = 0; i < playersCursors[player]; i++) {
             sum += getCardValue(playersCards[player][i]);
@@ -136,13 +136,13 @@ public class Blackjack {
         return sum;
     }
 
-    static int getHandValue(int player) {
+    private static int getHandValue(int player) {
         int sum = getHandSum(player);
 
         return sum <= MAX_VALUE ? sum : 0;
     }
 
-    static boolean confirm(String message) throws IOException {
+    private static boolean confirm(String message) throws IOException {
         logger.info(message + " [y/n]");
 
         switch (Choice.getCharacterFromUser()) {
