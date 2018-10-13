@@ -133,8 +133,9 @@ public class Blackjack {
     static boolean confirm(String message) throws IOException {
         logger.info(message + " [y/n]");
 
-        switch (Character.toUpperCase(Choice.getCharacterFromUser())) {
+        switch (Choice.getCharacterFromUser()) {
             case 'Y':
+            case 'y':
                 return true;
             default:
                 return false;
