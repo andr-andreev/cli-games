@@ -139,7 +139,7 @@ public class Blackjack {
     static int getHandValue(int player) {
         int sum = getHandSum(player);
 
-        return sum <= 21 ? sum : 0;
+        return sum <= MAX_VALUE ? sum : 0;
     }
 
     static boolean confirm(String message) throws IOException {
