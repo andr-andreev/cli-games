@@ -12,6 +12,8 @@ public class Blackjack {
 
     private static final int INTERACTIVE_PLAYER_INDEX = 0;
     private static final int NON_INTERACTIVE_PLAYER_INDEX = 1;
+
+    private static final int INTERACTIVE_HAND_VALUE_LIMIT = 20;
     private static final int NON_INTERACTIVE_HAND_VALUE_LIMIT = 16;
 
     private static final int BET = 10;
@@ -76,28 +78,26 @@ public class Blackjack {
     }
 
     private static void playInteractiveRound(int playerIndex) throws IOException {
-        int[] cards = new int[]{addCardToPlayer(playerIndex), addCardToPlayer(playerIndex)};
+        int cardCount = 0;
 
-        for (int card : cards) {
-            logger.info("You got a {}", CardUtils.toString(card));
-        }
-
-        while (getHandSum(playerIndex) < MAX_VALUE && confirm("Do you want to take a new card?")) {
+        while (cardCount < 2 || (getHandSum(playerIndex) < INTERACTIVE_HAND_VALUE_LIMIT && confirm("Do you want to take a new card?"))) {
             int card = addCardToPlayer(playerIndex);
+            cardCount++;
+
             logger.info("You got a {}", CardUtils.toString(card));
         }
     }
 
     private static void playNonInteractiveRound(int playerIndex) {
-        int[] cards = new int[]{addCardToPlayer(playerIndex), addCardToPlayer(playerIndex)};
+        int cardCount = 0;
 
-        for (int card : cards) {
-            logger.info("The player got a {}", CardUtils.toString(card));
-        }
+        while (cardCount < 2 || getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
+            if (cardCount >= 2) {
+                logger.info("The player took a new card");
+            }
 
-        while (getHandSum(playerIndex) < NON_INTERACTIVE_HAND_VALUE_LIMIT) {
-            logger.info("The player took a new card");
             int card = addCardToPlayer(playerIndex);
+            cardCount++;
 
             logger.info("The player got a {}", CardUtils.toString(card));
         }
