@@ -1,10 +1,10 @@
-package games;
+package collection.games;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Slot {
-    private static final Logger logger = LoggerFactory.getLogger(Slot.class);
+public class SlotMachine {
+    private static final Logger logger = LoggerFactory.getLogger(SlotMachine.class);
 
     private static final int SIZE = 7;
 
@@ -33,7 +33,7 @@ public class Slot {
                     "You {} ${}. Your balance is: ${}.",
                     result > 0 ? "won" : "lost",
                     Math.abs(result),
-                    balance > 0 ? balance : 0
+                    Math.max(balance, 0)
             );
         }
     }
