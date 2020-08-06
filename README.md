@@ -1,29 +1,28 @@
-# games
+# cli-games [![Build Status](https://api.travis-ci.org/andr-andreev/cli-games.svg?branch=master)](https://travis-ci.org/github/andr-andreev/cli-games)
 
-[![](https://jitpack.io/v/andr-andreev/project-lvl1-s431.svg)](https://jitpack.io/#andr-andreev/project-lvl1-s431)
-[![Build Status](https://travis-ci.org/andr-andreev/project-lvl1-s431.svg?branch=master)](https://travis-ci.org/andr-andreev/project-lvl1-s431)
+A collection of command-line interface card games written in Java.
 
-## Start
+## Games included
+- Slot machine
+- War ([rules](https://en.wikipedia.org/wiki/War_(card_game)#Gameplay))
+- Blackjack
+
+### Start
 ```bash
-$ make
+make
 ```
 
-## Setup
+### Build
 ```bash
-$ make build
+make build
 ```
 
-## Run
+### Run
 ```bash
-$ make run
+make run
 ```
 
-## Run tests
+### Update dependencies and plugins
 ```bash
-$ make test
-```
-
-## Update dependencies and plugins
-```bash
-$ make update
+make update
 ```
