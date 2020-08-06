@@ -1,5 +1,8 @@
-/**/target/
-!/.mvn/wrapper/maven-wrapper.properties
-/**/.mvn/
-/pom.xml.versionsBackup
+.idea
+/target
+target/*
 /logs/
+/**/.mvn/
+!/.mvn/wrapper/maven-wrapper.properties
+/pom.xml.versionsBackup
+*.iml
