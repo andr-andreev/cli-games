@@ -1,16 +1,16 @@
-package games;
+package collection;
 
 import org.apache.commons.math3.util.MathArrays;
 
-class CardUtils {
-    enum Suit {
+public class CardUtils {
+    public enum Suit {
         SPADES,
         HEARTS,
         CLUBS,
         DIAMONDS,
     }
 
-    enum Rank {
+    public enum Rank {
         SIX,
         SEVEN,
         EIGHT,
@@ -22,26 +22,26 @@ class CardUtils {
         ACE,
     }
 
-    static final int RANKS_COUNT = Rank.values().length;
-    static final int CARDS_COUNT = RANKS_COUNT * Suit.values().length;
+    public static final int RANKS_COUNT = Rank.values().length;
+    public static final int CARDS_COUNT = RANKS_COUNT * Suit.values().length;
 
-    static int[] getShuffledDeck() {
+    public static int[] getShuffledDeck() {
         int[] deck = createRange(0, CardUtils.CARDS_COUNT);
         MathArrays.shuffle(deck);
 
         return deck;
     }
 
-    static Suit getSuit(final int cardNumber) {
+    public static Suit getSuit(final int cardNumber) {
         return Suit.values()[cardNumber / RANKS_COUNT];
     }
 
-    static Rank getRank(final int cardNumber) {
+    public static Rank getRank(final int cardNumber) {
         return Rank.values()[cardNumber % RANKS_COUNT];
     }
 
-    static String toString(final int cardNumber) {
-        return getRank(cardNumber) + " " + getSuit(cardNumber);
+    public static String toString(final int cardNumber) {
+        return getRank(cardNumber) + " of " + getSuit(cardNumber);
     }
 
     private static int[] createRange(final int start, final int end) {
