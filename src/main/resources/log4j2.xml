@@ -7,7 +7,7 @@
         <RollingFile
                 name="FileLogger"
                 fileName="logs/java-boilerplate.log"
-                filePattern="logs/games-%d{yyyy-MM-dd}.log"
+                filePattern="logs/cli-games-%d{yyyy-MM-dd}.log"
                 append="true">
             <PatternLayout
                     pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
