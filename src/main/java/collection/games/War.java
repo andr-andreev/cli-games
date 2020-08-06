@@ -1,20 +1,21 @@
-package games;
+package collection.games;
 
+import collection.CardUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
-public class Drunkard {
-    private static final Logger logger = LoggerFactory.getLogger(Drunkard.class);
+public class War {
+    private static final Logger logger = LoggerFactory.getLogger(War.class);
 
     private static final int PLAYERS_COUNT = 3;
     private static final int PLAYER_CARDS_COUNT = CardUtils.CARDS_COUNT / PLAYERS_COUNT;
     private static final int DRAW_RESULT = -1;
 
-    private static int[][] playersCards = new int[PLAYERS_COUNT][CardUtils.CARDS_COUNT];
-    private static int[] playersCardsBeginCursors = new int[PLAYERS_COUNT];
-    private static int[] playersCardsEndCursors = new int[PLAYERS_COUNT];
-    private static int[] playersCardCounts = new int[PLAYERS_COUNT];
+    private static final int[][] playersCards = new int[PLAYERS_COUNT][CardUtils.CARDS_COUNT];
+    private static final int[] playersCardsBeginCursors = new int[PLAYERS_COUNT];
+    private static final int[] playersCardsEndCursors = new int[PLAYERS_COUNT];
+    private static final int[] playersCardCounts = new int[PLAYERS_COUNT];
     private static int[] activePlayers = new int[PLAYERS_COUNT];
 
     public static void main(String... __) {
