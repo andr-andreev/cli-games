@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.andreyandreev</groupId>
-    <artifactId>games</artifactId>
+    <artifactId>cli-games</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -19,7 +19,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <!--Libs-->
-        <log4j-slf4j-impl.version>2.11.1</log4j-slf4j-impl.version>
+        <log4j-slf4j-impl.version>2.13.3</log4j-slf4j-impl.version>
         <commons-math3.version>3.6.1</commons-math3.version>
 
         <!--Plugins-->
@@ -29,12 +29,6 @@
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
-        <spotbugs-maven-plugin.version>3.1.6</spotbugs-maven-plugin.version>
-        <spotbugs.version>3.1.7</spotbugs.version>
-        <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
-        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
-
     </properties>
 
     <dependencies>
@@ -84,7 +78,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>games.Choice</mainClass>
+                            <mainClass>collection.GameSelector</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -154,104 +148,6 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <configuration>
-                    <generateBackupPoms>false</generateBackupPoms>
-                    <rulesUri>file://${project.basedir}/maven-version-rules.xml</rulesUri>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbugs-maven-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs</artifactId>
-                        <version>${spotbugs.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${maven-pmd-plugin.version}</version>
-                <configuration>
-                    <failOnViolation>true</failOnViolation>
-                    <printFailingErrors>true</printFailingErrors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>pmd</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <logViolationsToConsole>true</logViolationsToConsole>
-                    <checkstyleRules>
-                        <module name="Checker">
-                            <!-- Checks for Size Violations.                    -->
-                            <!-- See http://checkstyle.sf.net/config_sizes.html -->
-                            <module name="FileLength">
-                                <property name="max" value="3500" />
-                                <property name="fileExtensions" value="java"/>
-                            </module>
-
-                            <!-- Checks for whitespace                               -->
-                            <!-- See http://checkstyle.sf.net/config_whitespace.html -->
-                            <module name="FileTabCharacter"/>
-
-                            <module name="TreeWalker">
-                                <module name="StaticVariableName"/>
-                                <module name="TypeName">
-                                    <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$"/>
-                                </module>
-                            </module>
-                        </module>
-                    </checkstyleRules>
                 </configuration>
             </plugin>
 
