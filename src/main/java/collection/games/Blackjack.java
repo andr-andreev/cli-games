@@ -1,5 +1,7 @@
-package games;
+package collection.games;
 
+import collection.CardUtils;
+import collection.GameSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +26,8 @@ public class Blackjack {
     private static int[] deck;
     private static int cursor;
 
-    private static int[] players = {INTERACTIVE_PLAYER_INDEX, NON_INTERACTIVE_PLAYER_INDEX};
-    private static int[] playersBalances = {100, 100};
+    private static final int[] players = {INTERACTIVE_PLAYER_INDEX, NON_INTERACTIVE_PLAYER_INDEX};
+    private static final int[] playersBalances = {100, 100};
     private static int[][] playersCards;
     private static int[] playersCursors;
 
@@ -145,7 +147,7 @@ public class Blackjack {
     private static boolean confirm(String message) throws IOException {
         logger.info(message + " [y/n]");
 
-        switch (Choice.getCharacterFromUser()) {
+        switch (GameSelector.getCharacterFromUser()) {
             case 'Y':
             case 'y':
                 return true;
